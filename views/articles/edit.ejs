@@ -1,0 +1,6 @@
+<%- include('partials/header')-%>
+<div class="container">
+	<h1 class="mb-4 mt-4">Edit Article</h1>
+	<form action="/articles/edit/<%= article.id %>" method="POST"><%- include('partials/_forms')-%></form>
+</div>
+<%- include('partials/footer') -%>
