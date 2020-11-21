@@ -47,7 +47,9 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/articles', articlesRouter);
 
 app.get('/', (req, res) => {
-	res.render('home');
+	if (req.isAuthenticated()) {
+		res.redirect('/articles');
+	} else res.render('home');
 });
 
 app.get('/login', (req, res) => {
