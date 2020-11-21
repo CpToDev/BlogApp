@@ -1,7 +1,9 @@
 <%- include('partials/header') -%>
 <div class="container mt-5">
 	<h1>Login</h1>
-
+	<% if (message){ %>
+	<div class="alert alert-info" role="alert"><%= message %></div>
+	<% } %>
 	<div class="row">
 		<div class="col-sm-8">
 			<div class="card">
@@ -19,6 +21,7 @@
 						<button type="submit" class="btn btn-dark">Login</button>
 					</form>
 				</div>
+				<p class="ml-3">Don't have an Account? <a href="/register">Register</a></p>
 			</div>
 		</div>
 	</div>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../model/Article');
+const url = require('url');
 
 //create
 
@@ -8,7 +9,7 @@ router.get('/new', (req, res) => {
 	if (req.isAuthenticated()) {
 		res.render('articles/new', { article: new Article() });
 	} else {
-		res.redirect('/login');
+		res.render('login', { message: 'You must be logged In ' });
 	}
 });
 
@@ -16,7 +17,8 @@ router.post('/', (req, res) => {
 	if (req.isAuthenticated()) {
 		let newArticle = new Article({
 			title: req.body.title,
-			description: req.body.description
+			description: req.body.description,
+			author: req.user.name
 		});
 		newArticle.save((err, article) => {
 			if (err) {
@@ -28,20 +30,23 @@ router.post('/', (req, res) => {
 			}
 		});
 	} else {
-		res.redirect('/login');
+		res.render('login', { message: 'You must be logged In ' });
 	}
 });
 
 //read
 
 router.get('/', (req, res) => {
-	Article.find((err, result) => {
-		if (!err) {
-			console.log(typeof result);
-			result.sort((a, b) => b.createdAt - a.createdAt);
-			res.render('articles/index', { articles: result });
-		}
-	});
+	if (req.isAuthenticated()) {
+		Article.find((err, result) => {
+			if (!err) {
+				result.sort((a, b) => b.createdAt - a.createdAt);
+				res.render('articles/index', { articles: result });
+			}
+		});
+	} else {
+		res.render('login', { message: 'You must be logged In ' });
+	}
 });
 
 router.get('/:id', (req, res) => {
@@ -50,11 +55,15 @@ router.get('/:id', (req, res) => {
 			if (err) {
 				res.redirect('/');
 			} else {
-				res.render('articles/show', { article: result });
+				console.log(req.user.name);
+				console.log(result.author);
+				const isAutherized = req.user.name === result.author;
+
+				res.render('articles/show', { article: result, isAutherized: isAutherized });
 			}
 		});
 	} else {
-		res.redirect('/login');
+		res.render('login', { message: 'You must be logged In ' });
 	}
 });
 
@@ -68,7 +77,7 @@ router.get('/edit/:id', (req, res) => {
 				res.render('articles/edit', { article: result });
 			}
 		});
-	} else [res.redirect('/login')];
+	} else res.render('login', { message: 'You must be logged In ' });
 });
 router.post('/edit/:id', (req, res) => {
 	if (req.isAuthenticated()) {
@@ -90,7 +99,7 @@ router.post('/edit/:id', (req, res) => {
 			}
 		});
 	} else {
-		res.redirect('/login');
+		res.render('login', { message: 'You must be logged In ' });
 	}
 });
 
@@ -107,7 +116,7 @@ router.get('/delete/:id', (req, res) => {
 			}
 		});
 	} else {
-		res.redirect('/login');
+		res.render('login', { message: 'You must be logged In ' });
 	}
 });
 

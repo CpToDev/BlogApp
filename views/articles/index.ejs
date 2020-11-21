@@ -5,8 +5,11 @@
 	<div class="card mt-4">
 		<div class="card-body">
 			<h5 class="card-title"><%= article.title %></h5>
-			<h6 class="card-subtitle mb-2 text-muted"><%= article.createdAt.toLocaleDateString() %></h6>
-			<p class="card-text"><%= article.description.substring(0,150) %>....</p>
+			<span class="mr-3">
+				<a href="#"><span><%= article.author %></span></a>
+			</span>
+			<span class="card-subtitle mb-2 mr-2 text-muted"><%= article.createdAt.toLocaleDateString() %></span>
+			<p class="card-text mt-2"><%= article.description.substring(0,150) %>....</p>
 			<a href="/articles/<%= article.id %>" class="btn btn-primary btn-sm">ReadMore</a>
 		</div>
 	</div>
